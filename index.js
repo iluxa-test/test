@@ -55,10 +55,35 @@ myForm = {
             else{
                 element.classList.remove("error");
             }
-        })
+        });
         if (validationResult.isValid){
             document.getElementById("submitButton").disabled = true;
-            const xhr = new XMLHttpRequest();
+            function executeQuery() {
+                let timeOut;
+                $.ajax({
+                    url: 'progress.json',
+                    success: function(data) {
+                        if (data.status === "success"){
+                            document.getElementById("resultContainer").classList.add("success");
+                            document.getElementById("resultContainer").innerHTML = "Success";
+                            clearTimeout(timeOut);
+                        }
+                        else if (data.status === "error"){
+                            document.getElementById("resultContainer").classList.add("error");
+                            document.getElementById("resultContainer").innerHTML = data.reason;
+                            clearTimeout(timeOut);
+                        }
+                        else if (data.status === "progress"){
+                            document.getElementById("resultContainer").classList.add("progress");
+                        }
+                    }
+                });
+                timeOut = setTimeout(executeQuery, 5000); // you could choose not to continue on failure...
+            }
+
+            executeQuery();
+
+/*            const xhr = new XMLHttpRequest();
             xhr.open('GET', 'progress.json', false);
             xhr.send();
             if (xhr.status !== 200) {
@@ -76,10 +101,10 @@ myForm = {
                 else {
                     document.getElementById("resultContainer").classList.add("progress");
                     do {
-                        setTimeout(this.submit(),response.timeout);
+                        setTimeout(this.submit,response.timeout);
                     } while (response.status === "progress")
                 }
-            }
+            } */
         }
     },
     getData: function () {
