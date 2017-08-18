@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Node.js test</title>
+</head>
+<body>
+<form id="myForm" action="success.json">
+    <br>
+    <label>ФИО:<br>
+        <input type="text" name="fio">
+    </label><br>
+    <label>Email:<br>
+        <input type="text" name="email">
+    </label><br>
+    <label>Телефон:<br>
+        <input type="text" name="phone">
+    </label><br><br>
+    <input id="submitButton" value="Отправить" onclick="myForm.submit()"  type="button">
+    <div id="resultContainer">
+
+    </div>
+</form>
+</body>
+<script src="index.js"></script>
+</html>
