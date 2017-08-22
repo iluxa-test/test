@@ -1,11 +1,11 @@
-myForm = {
+MyForm = {
     validate: function() {
         const arr = [];
 
         // fio validation
         const fio = document.forms["myForm"].elements["fio"].value;
         if (fio.length > 0) {
-            if (fio.match(/\S+/g).length !== 3) {
+            if (fio.match(/\w+/g).length !== 3) {
                 arr.push("fio");
             }
         }
@@ -61,50 +61,28 @@ myForm = {
             function executeQuery() {
                 let timeOut;
                 $.ajax({
-                    url: 'progress.json',
+                    url: document.getElementById("myForm").getAttribute("action"),
                     success: function(data) {
+                        const resultContainerElement=document.getElementById("resultContainer");
+                        resultContainerElement.className="";
                         if (data.status === "success"){
-                            document.getElementById("resultContainer").classList.add("success");
-                            document.getElementById("resultContainer").innerHTML = "Success";
+                            resultContainerElement.classList.add("success");
+                            resultContainerElement.innerHTML = "Success";
                             clearTimeout(timeOut);
                         }
                         else if (data.status === "error"){
-                            document.getElementById("resultContainer").classList.add("error");
-                            document.getElementById("resultContainer").innerHTML = data.reason;
+                            resultContainerElement.classList.add("error");
+                            resultContainerElement.innerHTML = data.reason;
                             clearTimeout(timeOut);
                         }
                         else if (data.status === "progress"){
-                            document.getElementById("resultContainer").classList.add("progress");
+                            resultContainerElement.classList.add("progress");
+                            setTimeout(executeQuery, data.timeout);
                         }
                     }
                 });
-                timeOut = setTimeout(executeQuery, 5000); // you could choose not to continue on failure...
             }
-
             executeQuery();
-
-/*            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'progress.json', false);
-            xhr.send();
-            if (xhr.status !== 200) {
-                alert( xhr.status + ': ' + xhr.statusText );
-            } else {
-                const response = JSON.parse(xhr.responseText);
-                if (response.status === "success"){
-                    document.getElementById("resultContainer").classList.add("success");
-                    document.getElementById("resultContainer").innerHTML = "Success";
-                }
-                else if (response.status === "error"){
-                    document.getElementById("resultContainer").classList.add("error");
-                    document.getElementById("resultContainer").innerHTML = response.reason;
-                }
-                else {
-                    document.getElementById("resultContainer").classList.add("progress");
-                    do {
-                        setTimeout(this.submit,response.timeout);
-                    } while (response.status === "progress")
-                }
-            } */
         }
     },
     getData: function () {
@@ -115,8 +93,9 @@ myForm = {
         }
     },
     setData: function (data) {
-        document.forms["myForm"].elements["fio"].value = data.fio;
-        document.forms["myForm"].elements["email"].value = data.email;
-        document.forms["myForm"].elements["phone"].value = data.phone;
+        const myForm = document.forms["myForm"];
+        myForm.elements["fio"].value = data.fio;
+        myForm.elements["email"].value = data.email;
+        myForm.elements["phone"].value = data.phone;
     }
 };
